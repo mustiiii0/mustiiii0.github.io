@@ -315,7 +315,6 @@ footer { margin-top: 2rem; font-size: 0.7rem; color: var(--text-secondary); opac
 <canvas id="bg-canvas"></canvas>
 
 <div class="controls">
-  <!-- Ny plats för musikkontrollen -->
   <button id="music-btn" class="music-toggle-btn" title="Musik På/Av">
     <span id="music-icon">🔇</span>
   </button>
@@ -423,6 +422,9 @@ const texts = {
     about: "Masterstudent vid MDU med passion för pålitliga system. Jag fokuserar på att bygga mjukvara som inte bara fungerar, utan som går att lita på i kritiska miljöer.",
     contact: "📧 Kontakta mig via Mejl",
     footer: "© 2026 Mustafa NejM • Reliable Systems Engineer",
+    cvText: "📄 Ladda ner mitt CV (PDF)",
+    cvLoading: "⌛ Förbereder fil...",
+    cvSuccess: "✅ Nedladdning startad!",
     logs: {
       init: "Initierar system... KLART",
       lang: "Språk ändrat till: SVENSKA",
@@ -439,6 +441,9 @@ const texts = {
     about: "Master's student at MDU with a passion for reliable systems. I focus on building software that doesn't just work, but can be trusted in critical environments.",
     contact: "📧 Contact via Email",
     footer: "© 2026 Mustafa NejM • Reliable Systems Engineer",
+    cvText: "📄 Download my CV (PDF)",
+    cvLoading: "⌛ Preparing file...",
+    cvSuccess: "✅ Download started!",
     logs: {
       init: "Initializing system... DONE",
       lang: "Language changed to: ENGLISH",
@@ -493,7 +498,26 @@ function updateUI() {
   document.getElementById('tab-skills-btn').textContent = t.tabs.skills;
   document.getElementById('tab-projects-btn').textContent = t.tabs.projects;
   document.getElementById('tab-edu-btn').textContent = t.tabs.edu;
+  document.getElementById('cv-btn-text').textContent = t.cvText;
 }
+
+/* CV NEDLADDNINGS-SIMULERING */
+const cvBtn = document.getElementById('download-cv');
+const cvBtnText = document.getElementById('cv-btn-text');
+cvBtn.onclick = (e) => {
+  const t = texts[currentLang];
+  logToTerminal("CHECKING FILE SYSTEM...");
+  cvBtnText.textContent = t.cvLoading;
+  
+  setTimeout(() => {
+    logToTerminal("FILE FOUND: CV_EN.pdf.pdf");
+    logToTerminal("DOWNLOADING [##########] 100%");
+    cvBtnText.textContent = t.cvSuccess;
+    setTimeout(() => {
+      cvBtnText.textContent = t.cvText;
+    }, 2000);
+  }, 1000);
+};
 
 /* MUSIK LOGIK */
 const musicBtn = document.getElementById('music-btn');
