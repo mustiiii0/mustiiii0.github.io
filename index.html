@@ -29,6 +29,14 @@ body.light {
   --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
+/* Förhindra textmarkering för att skydda innehåll */
+body {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -119,17 +127,18 @@ main {
 
 .avatar-container {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   margin: 0 auto 1.5rem;
   border-radius: 50%;
-  padding: 5px;
-  background: linear-gradient(45deg, var(--accent), transparent);
+  padding: 4px;
+  background: linear-gradient(45deg, var(--accent), #6366f1, transparent);
   transition: transform 0.5s var(--ease-out);
+  box-shadow: 0 10px 30px -10px rgba(129, 140, 248, 0.5);
 }
 
 .avatar-container:hover {
-  transform: rotate(5deg) scale(1.05);
+  transform: rotate(3deg) scale(1.05);
 }
 
 .avatar {
@@ -138,6 +147,8 @@ main {
   border-radius: 50%;
   background: #0f172a;
   object-fit: cover;
+  border: 2px solid var(--glass-bg);
+  pointer-events: none; /* Förhindrar att bilden dras ut */
 }
 
 .status-badge {
@@ -310,7 +321,7 @@ footer { margin-top: 2rem; font-size: 0.7rem; color: var(--text-secondary); opac
 }
 </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <!-- Inaktiverar högerklick globalt -->
 
 <canvas id="bg-canvas"></canvas>
 
@@ -324,7 +335,9 @@ footer { margin-top: 2rem; font-size: 0.7rem; color: var(--text-secondary); opac
 
 <main>
   <div class="avatar-container">
-    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Mustafa&top=shortHair&mouth=serious&eyebrows=defaultNatural" alt="Mustafa NejM" class="avatar">
+    <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&h=400&fit=crop" 
+         onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Mustafa'" 
+         alt="Mustafa NejM" class="avatar" draggable="false">
   </div>
 
   <div class="status-badge">
@@ -413,6 +426,17 @@ footer { margin-top: 2rem; font-size: 0.7rem; color: var(--text-secondary); opac
 </audio>
 
 <script>
+/* SÄKERHETSKRIPT - FÖRHINDRA KODINSYN */
+document.onkeydown = function(e) {
+  // Blockera F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+  if (e.keyCode == 123 || 
+      (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) || 
+      (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
+    logToTerminal("Åtkomst nekad: Utvecklarverktyg inaktiverade.");
+    return false;
+  }
+};
+
 /* FLERSPRÅKIGT STÖD */
 const texts = {
   sv: {
