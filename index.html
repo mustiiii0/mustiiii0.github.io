@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mustafa NejM | Reliable Systems Engineering</title>
+
+<meta name="description" content="Mustafa NejM – Masterstudent inom Reliable Systems Engineering. Fokus på kvalitet och säkerhet." />
+
+<style>
+:root {
+  --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent: #818cf8;
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+body.light {
+  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent: #4f46e5;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --card-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  transition: background 0.8s var(--ease-out);
+  padding: 2rem 1rem;
+}
+
+#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.controls {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  z-index: 100;
+}
+
+.controls button {
+  border: 1px solid var(--glass-border);
+  min-width: 45px;
+  height: 45px;
+  padding: 0 10px;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s var(--ease-out);
+  font-size: 0.9rem;
+}
+
+.controls button:hover {
+  background: var(--accent);
+  color: white;
+  transform: scale(1.05);
+}
+
+.music-toggle-btn {
+  padding: 0 15px !important;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 550px;
+  padding: 3rem 2rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(25px);
+  border: 1px solid var(--glass-border);
+  border-radius: 32px;
+  box-shadow: var(--card-shadow);
+  animation: slideUp 1s var(--ease-out);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.avatar-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  padding: 5px;
+  background: linear-gradient(45deg, var(--accent), transparent);
+  transition: transform 0.5s var(--ease-out);
+}
+
+.avatar-container:hover {
+  transform: rotate(5deg) scale(1.05);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #0f172a;
+  object-fit: cover;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+
+.pulse {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: pulse-ring 1.5s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.8); }
+}
+
+h1 { margin: 0; font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; }
+
+.sub-container {
+  min-height: 1.5rem;
+  margin-bottom: 2rem;
+}
+.sub {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.cursor {
+  display: inline-block;
+  width: 2px;
+  background-color: var(--accent);
+  margin-left: 2px;
+  animation: blink 1s infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+.tabs-container {
+  margin: 2rem 0;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 2rem;
+}
+
+.tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.tab-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.tab-content {
+  display: none;
+  text-align: left;
+  animation: fadeIn 0.4s ease;
+  min-height: 150px;
+}
+
+.tab-content.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.skill-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.05);
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  margin: 0 5px 10px 0;
+  border: 1px solid var(--glass-border);
+  transition: 0.3s;
+}
+
+.skill-tag:hover {
+  background: rgba(129, 140, 248, 0.2);
+  border-color: var(--accent);
+}
+
+.project-item {
+  padding: 10px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.project-item:last-child { border: none; }
+
+.link-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--glass-border);
+  padding: 12px;
+  border-radius: 14px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  color: white;
+  box-shadow: 0 10px 20px -10px var(--accent);
+}
+
+.full-width { grid-column: span 2; }
+
+.terminal {
+  background: rgba(0,0,0,0.4);
+  border-radius: 15px;
+  padding: 15px;
+  margin-top: 2rem;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.7rem;
+  text-align: left;
+  border: 1px solid var(--glass-border);
+  color: #10b981;
+  height: 100px;
+  overflow-y: auto;
+}
+
+footer { margin-top: 2rem; font-size: 0.7rem; color: var(--text-secondary); opacity: 0.5; }
+
+@media (max-width: 480px) {
+  .link-list { grid-template-columns: 1fr; }
+  .full-width { grid-column: span 1; }
+  main { padding: 2rem 1.5rem; }
+  .controls { top: 0.75rem; right: 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="controls">
+  <!-- Ny plats för musikkontrollen -->
+  <button id="music-btn" class="music-toggle-btn" title="Musik På/Av">
+    <span id="music-icon">🔇</span>
+  </button>
+  <button id="theme-toggle" title="Växla Tema">☀️</button>
+  <button id="lang-toggle" title="Byt Språk">EN</button>
+</div>
+
+<main>
+  <div class="avatar-container">
+    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Mustafa&top=shortHair&mouth=serious&eyebrows=defaultNatural" alt="Mustafa NejM" class="avatar">
+  </div>
+
+  <div class="status-badge">
+    <div class="pulse"></div>
+    <span id="status-txt">System: Aktivt</span>
+  </div>
+
+  <h1>Mustafa NejM</h1>
+  <div class="sub-container">
+    <span class="sub" id="typewriter"></span><span class="cursor"></span>
+  </div>
+
+  <div class="tabs-container">
+    <div class="tab-buttons">
+      <button class="tab-btn active" id="tab-about-btn" onclick="openTab(event, 'about')">Om mig</button>
+      <button class="tab-btn" id="tab-skills-btn" onclick="openTab(event, 'skills')">Färdigheter</button>
+      <button class="tab-btn" id="tab-projects-btn" onclick="openTab(event, 'projects')">Projekt</button>
+      <button class="tab-btn" id="tab-edu-btn" onclick="openTab(event, 'edu')">Utbildning</button>
+    </div>
+
+    <div id="about" class="tab-content active">
+      <p id="about-txt" style="font-size: 0.9rem; line-height: 1.6; color: var(--text-secondary);">
+        Masterstudent vid MDU med passion för pålitliga system. Jag fokuserar på att bygga mjukvara som inte bara fungerar, utan som går att lita på i kritiska miljöer.
+      </p>
+    </div>
+
+    <div id="skills" class="tab-content">
+      <div class="skill-tag">Python</div>
+      <div class="skill-tag">System Verification</div>
+      <div class="skill-tag">Safety Critical Systems</div>
+      <div class="skill-tag">C/C++</div>
+      <div class="skill-tag">Agile Development</div>
+      <div class="skill-tag">Reliability Engineering</div>
+      <div class="skill-tag">Embedded Systems</div>
+      <div class="skill-tag">Linux / Unix</div>
+    </div>
+
+    <div id="projects" class="tab-content">
+      <div class="project-item">
+        <strong style="color: var(--accent); font-size: 0.85rem;">Autonomous Navigation</strong>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 5px 0;">Verifiering av säkerhetskritiska algoritmer för fordon.</p>
+      </div>
+      <div class="project-item">
+        <strong style="color: var(--accent); font-size: 0.85rem;">Reliability Tracker</strong>
+        <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 5px 0;">Verktyg för analys av systemfel och uptime.</p>
+      </div>
+    </div>
+
+    <div id="edu" class="tab-content">
+      <div style="margin-bottom: 10px;">
+        <strong style="font-size: 0.85rem; color: var(--accent);">Mälardalens Universitet</strong><br>
+        <span style="font-size: 0.75rem; color: var(--text-secondary);">M.Sc. Reliable Systems Engineering (Pågående)</span>
+      </div>
+      <div>
+        <strong style="font-size: 0.85rem; color: var(--accent);">Kandidatexamen</strong><br>
+        <span style="font-size: 0.75rem; color: var(--text-secondary);">Datavetenskap / Systemteknik</span>
+      </div>
+    </div>
+  </div>
+
+  <nav class="link-list">
+     <a href="CV_EN.pdf.pdf" class="cv-btn full-width" id="download-cv" download>
+      <span id="cv-btn-text">📄 Ladda ner mitt CV (PDF)</span>
+    </a>
+    <a href="https://www.linkedin.com/in/mustafa-nejm/" target="_blank">LinkedIn</a>
+    <a href="https://github.com/mustiiii0" target="_blank">GitHub</a>
+    <a href="mailto:mustafa.nejm03@gmail.com" class="full-width" id="contact-btn">📧 Kontakta mig via Mejl</a>
+    <a href="https://www.tiktok.com/@number_one.1_1" target="_blank">TikTok</a>
+    <a href="https://www.instagram.com/mustiiii__03" target="_blank">Instagram</a>
+    <a href="https://web.facebook.com/mustafa.nejm03" target="_blank">Facebook</a>
+    <a href="https://www.snapchat.com/add/mustiiii_0" target="_blank">Snapchat</a>
+    <a href="https://x.com/mustiiii_0_3" target="_blank">X (Twitter)</a>
+    <a href="https://www.threads.net/@mustiiii__03" target="_blank">Threads</a>
+  </nav>
+
+  <div class="terminal" id="terminal">
+    > Initierar system... KLART<br>
+    > Västerås, SE | Lokal tid: <span id="time">00:00</span>
+  </div>
+
+  <footer id="footer">© 2026 Mustafa NejM • Reliable Systems Engineer</footer>
+</main>
+
+<audio id="bg-audio" loop>
+  <source src="Ashref.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* FLERSPRÅKIGT STÖD */
+const texts = {
+  sv: {
+    status: "System: Aktivt",
+    titles: ["Reliable Systems Engineering", "Safety-Critical Design", "System Verification Specialist"],
+    tabs: { about: "Om mig", skills: "Färdigheter", projects: "Projekt", edu: "Utbildning" },
+    about: "Masterstudent vid MDU med passion för pålitliga system. Jag fokuserar på att bygga mjukvara som inte bara fungerar, utan som går att lita på i kritiska miljöer.",
+    contact: "📧 Kontakta mig via Mejl",
+    footer: "© 2026 Mustafa NejM • Reliable Systems Engineer",
+    logs: {
+      init: "Initierar system... KLART",
+      lang: "Språk ändrat till: SVENSKA",
+      theme: "Tema uppdaterat.",
+      nav: "Navigerade till: ",
+      musicOn: "Musik startad: Ashref.mp3",
+      musicOff: "Musik pausad."
+    }
+  },
+  en: {
+    status: "System: Online",
+    titles: ["Reliable Systems Engineering", "Safety-Critical Design", "Verification Specialist"],
+    tabs: { about: "About", skills: "Skills", projects: "Projects", edu: "Education" },
+    about: "Master's student at MDU with a passion for reliable systems. I focus on building software that doesn't just work, but can be trusted in critical environments.",
+    contact: "📧 Contact via Email",
+    footer: "© 2026 Mustafa NejM • Reliable Systems Engineer",
+    logs: {
+      init: "Initializing system... DONE",
+      lang: "Language changed to: ENGLISH",
+      theme: "Theme updated.",
+      nav: "Navigated to: ",
+      musicOn: "Music enabled: Ashref.mp3",
+      musicOff: "Music disabled."
+    }
+  }
+};
+
+let currentLang = 'sv';
+
+/* TABS LOGIK */
+function openTab(evt, tabName) {
+  const contents = document.getElementsByClassName("tab-content");
+  for (let content of contents) content.classList.remove("active");
+  const buttons = document.getElementsByClassName("tab-btn");
+  for (let btn of buttons) btn.classList.remove("active");
+  
+  document.getElementById(tabName).classList.add("active");
+  evt.currentTarget.classList.add("active");
+  
+  const logPrefix = texts[currentLang].logs.nav;
+  logToTerminal(`${logPrefix}${tabName.toUpperCase()}`);
+}
+
+/* TERMINAL LOGG */
+function logToTerminal(msg) {
+  const term = document.getElementById('terminal');
+  const now = new Date().toLocaleTimeString('sv-SE', {hour: '2-digit', minute:'2-digit', second: '2-digit'});
+  term.innerHTML += `<br>> [${now}] ${msg}`;
+  term.scrollTop = term.scrollHeight;
+}
+
+/* SPRÅKBYTARE */
+document.getElementById('lang-toggle').onclick = (e) => {
+  currentLang = currentLang === 'sv' ? 'en' : 'sv';
+  e.target.textContent = currentLang === 'sv' ? 'EN' : 'SV';
+  updateUI();
+  titleIndex = 0;
+  logToTerminal(texts[currentLang].logs.lang);
+};
+
+function updateUI() {
+  const t = texts[currentLang];
+  document.getElementById('status-txt').textContent = t.status;
+  document.getElementById('footer').textContent = t.footer;
+  document.getElementById('contact-btn').textContent = t.contact;
+  document.getElementById('about-txt').textContent = t.about;
+  document.getElementById('tab-about-btn').textContent = t.tabs.about;
+  document.getElementById('tab-skills-btn').textContent = t.tabs.skills;
+  document.getElementById('tab-projects-btn').textContent = t.tabs.projects;
+  document.getElementById('tab-edu-btn').textContent = t.tabs.edu;
+}
+
+/* MUSIK LOGIK */
+const musicBtn = document.getElementById('music-btn');
+const audio = document.getElementById('bg-audio');
+const musicIcon = document.getElementById('music-icon');
+
+musicBtn.onclick = () => {
+  if (audio.paused) {
+    audio.play().then(() => {
+      musicIcon.textContent = "🔊";
+      logToTerminal(texts[currentLang].logs.musicOn);
+    }).catch(() => logToTerminal("Interaktion krävs för att starta ljud."));
+  } else {
+    audio.pause();
+    musicIcon.textContent = "🔇";
+    logToTerminal(texts[currentLang].logs.musicOff);
+  }
+};
+
+/* TYPEWRITER LOGIK */
+let titleIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+function type() {
+  const currentTitles = texts[currentLang].titles;
+  const fullText = currentTitles[titleIndex % currentTitles.length];
+  const display = isDeleting ? fullText.substring(0, charIndex--) : fullText.substring(0, charIndex++);
+  
+  document.getElementById('typewriter').textContent = display;
+  
+  let speed = isDeleting ? 50 : 100;
+  if (!isDeleting && display === fullText) {
+    speed = 2000;
+    isDeleting = true;
+  } else if (isDeleting && display === "") {
+    isDeleting = false;
+    titleIndex++;
+    speed = 500;
+  }
+  setTimeout(type, speed);
+}
+
+/* KLOCKA */
+function updateTime() {
+  const now = new Date();
+  document.getElementById('time').textContent = now.toLocaleTimeString('sv-SE', {hour: '2-digit', minute:'2-digit'});
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+/* TEMA */
+document.getElementById('theme-toggle').onclick = (e) => {
+  document.body.classList.toggle('light');
+  e.target.textContent = document.body.classList.contains('light') ? "🌙" : "☀️";
+  logToTerminal(texts[currentLang].logs.theme);
+};
+
+/* BAKGRUNDSANIMATION */
+const canvas = document.getElementById("bg-canvas");
+const ctx = canvas.getContext("2d");
+let points = [];
+
+function init() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  points = [];
+  const pointDensity = window.innerWidth < 480 ? 40 : 80;
+  for(let i=0; i<pointDensity; i++) {
+    points.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4
+    });
+  }
+}
+
+function animate() {
+  ctx.clearRect(0,0,canvas.width, canvas.height);
+  const color = getComputedStyle(document.body).getPropertyValue('--accent');
+  
+  points.forEach((p, i) => {
+    p.x += p.vx;
+    p.y += p.vy;
+    if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 1.5, 0, Math.PI*2);
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.4;
+    ctx.fill();
+    
+    for(let j=i+1; j<points.length; j++) {
+      const p2 = points[j];
+      const d = Math.hypot(p.x-p2.x, p.y-p2.y);
+      const limit = window.innerWidth < 480 ? 100 : 150;
+      if(d < limit) {
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = (1 - d/limit) * 0.15;
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
+    }
+  });
+  requestAnimationFrame(animate);
+}
+
+window.addEventListener('resize', init);
+init();
+animate();
+type();
+</script>
+</body>
+</html>
